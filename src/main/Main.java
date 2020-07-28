@@ -1,8 +1,8 @@
 package main;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class Main {
 
@@ -10,16 +10,25 @@ public class Main {
 		Usuario user1 = new Usuario("Paulo Silveira", 150);
 		Usuario user2 = new Usuario("Rodrigo Turini", 120);
 		Usuario user3 = new Usuario("Guilherme Silveira", 190);
-		List<Usuario> usuarios = Arrays.asList(user1, user2, user3);
-		Consumer<Usuario> mostraMensagem = u -> System.out.println("antes de imprimir os nomes");
-		Consumer<Usuario> imprimeNome = u -> System.out.println(u.getNome());
-		usuarios.forEach(mostraMensagem.andThen(imprimeNome)); // As interfaces consideradas @FunctionalInterface além
-																// de terem somente um método abstrato
-																// Agora também default métodos os quais podem ser
-																// chamados caso n haja nenhma implementação ou incluido
-																// com o método
-																// Inferido pela Lambda function
+
+		Predicate<Usuario> predicado = new Predicate<Usuario>() { // Predicado verifica uma condicao para que possa ser usado em um removeif
+																  // E itera os usuarios e os remove caso satisfaçam a condicao do predicate
+			@Override
+			public boolean test(Usuario t) {
+				return t.getPontos() > 140;
+			}
+		};
+
+		List<Usuario> usuarios = new ArrayList<>();
 		
+		usuarios.add(user1);
+		usuarios.add(user2);
+		usuarios.add(user3);
+		usuarios.removeIf(predicado);
+		
+		usuarios.removeIf(u -> u.getPontos() > 140); // Usando lambda function
+		
+		usuarios.forEach(u -> System.out.println(u.getNome() + '\n' + u.getPontos()));
 	}
 
 }
